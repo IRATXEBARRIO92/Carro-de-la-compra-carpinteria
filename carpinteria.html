@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="carpinteria.css">
+    <title>Carpintería Mazarredo</title>
+</head>
+
+<body>
+    <div id="titulocaja">
+        <img src="./01- Carpinteria/iconos/logo.svg" alt="" class="logo">
+        <h1 class="titulo">Carpinteria Mazarredo</h1>
+    </div>
+    <div id="contenedor">
+        <div class="caja">
+            <p class="producto">brocha</p>
+            <div class="imagen">
+                <img src="./01- Carpinteria/iconos/brocha.svg" alt="brocha" class="img">
+            </div>
+            <div class="precio">
+                <p id="costeBrocha" class="coste">11.95</p>
+            </div>
+            <div class="elegir">
+                <button id="includeBrocha" class="añadir">Añadir</button>
+                <button id="eliminarBrocha" class="eliminar">Eliminar</button>
+            </div>
+        </div>
+        <div class="caja">
+            <p class="producto">llave</p>
+            <div class="imagen">
+                <img src="./01- Carpinteria/iconos/llave.svg" alt="martillo" class="img">
+            </div>
+            <div class="precio">
+                <p id="costeLlave" class="coste">13.95</p>
+            </div>
+            <div class="elegir">
+                <button id="includeLlave" class="añadir">Añadir</button>
+                <button id="eliminarLlave" class="eliminar">Eliminar</button>
+            </div>
+        </div>
+        <div class="caja">
+            <p class="producto">martillo</p>
+            <div class="imagen">
+                <img src="./01- Carpinteria/iconos/martillo.svg" alt="martillo" class="img">
+            </div>
+            <div class="precio">
+                <p id="costeMartillo" class="coste">14.95</p>
+            </div>
+            <div class="elegir">
+                <button id="includeMartillo" class="añadir">Añadir</button>
+                <button id="eliminarMartillo" class="eliminar">Eliminar</button>
+            </div>
+        </div>
+        <div class="caja">
+            <p class="producto">tronco</p>
+            <div class="imagen">
+                <img src="./01- Carpinteria/iconos/tronco.svg" alt="tronco" class="img">
+            </div>
+            <div class="precio">
+                <p id="costeTronco" class="coste">9.95</p>
+            </div>
+            <div class="elegir">
+                <button id="includeTronco" class="añadir">Añadir</button>
+                <button id="eliminarTronco" class="eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+    <div class="carrito">
+        <img src="./01- Carpinteria/iconos/carrito.png" alt="" class="imagencarro"> <!--Pongo aqui la imagen del carro para que salga solo 1 vez y no cada vez que se añade un producto-->        
+    </div>
+    <script>
+        //AÑADIR ARTICULO, CANTIDAD Y COSTE
+        let incluirBrocha = document.querySelector("#includeBrocha"); // creo una variable para añadir el id de la brocha
+        incluirBrocha.addEventListener("click", function () { anadirCarrito("Brocha", 11.95) }); // compruebo el evento, si tiene un boton tipo click llama a la función (id includeBrocha)
+        let incluirLlave = document.querySelector("#includeLlave");
+        incluirLlave.addEventListener("click", function () { anadirCarrito("Llave", 13.95) });
+        let incluirMartillo = document.querySelector("#includeMartillo");
+        incluirMartillo.addEventListener("click", function () { anadirCarrito("Martillo", 14, 95) });
+        let incluirTronco = document.querySelector("#includeTronco");
+        incluirTronco.addEventListener("click", function () { anadirCarrito("Tronco", 9.95) });
+        function anadirCarrito(articulo, coste) {
+            let value;
+            if (document.querySelector(`.carrito${articulo}`)) { //comprobar si carritoBrocha existe 
+                //entra aqui si da por segunda vez al añadir
+                let cantidad = document.querySelector(`.carrito${articulo} .cantidad .numero`).innerHTML; //devuelve el valor que hay dentro de  la clase cantidad dentro dencarrito Brocha (carritoBrocha)
+                cantidad++; // lo mismo que value = value + 1
+                document.querySelector(".carrito" + articulo + " .cantidad .numero").innerHTML = cantidad;
+                let precioTotal = parseFloat(document.querySelector(".carrito" + articulo + " .costeTotal span").innerHTML); //al haber un espacio en " .costeTotal" significa que está dentro de .carritoarticulo // guarda el precio anterior
+                precioTotal = precioTotal + coste; // precioTotal += coste; // suma el precioTotal al precio anterior
+                precioTotal = precioTotal.toFixed(2);
+                document.querySelector(".carrito" + articulo + " .costeTotal span").innerHTML = precioTotal; //pintar el precioTotal en HTML    
+                document.querySelector(".carrito" + articulo + " .iconImg").innerHTML = "";
+                for (let i = 0; i < cantidad; i++) {
+                    document.querySelector(".carrito" + articulo + " .iconImg").innerHTML += `<img src="./01- Carpinteria/iconos/${articulo.toLowerCase()}.svg">`;
+                }
+            } else { // el primer caso no existe y entra al else para crearlo, al volver a dar a un boton irá al if porque ya existira
+                //debajo ponemos innerHTML += para que vaya añadiendo y no sustituya por lo anterior
+                document.querySelector(".carrito").innerHTML += `
+                <p class="CosteTotalProductos costeTodosProductos"></p>
+                <div class="carrito${articulo} carritoArticulos"> 
+                    <p class="cantidad cantidadArticulo">${articulo} 
+                        <span class="numero">1</span>
+                        <span class="iconImg">
+                            <img src="./01- Carpinteria/iconos/${articulo.toLowerCase()}.svg">
+                        </span>
+                    </p>
+                    <p class="costeTotal costeTotalArticulo">Coste: 
+                        <span>${coste}</span> 
+                    euros</p>
+                </div>`
+
+            }
+            SumarTodo();
+        }
+        // dos clases juntas es: <div class="carrito${articulo} carritoArticulos"> separadas con espacio.
+        // al tener la clase carrito${articulo} no funciona en CSS y por eso creo otra clase al lado.
+
+
+        //ELIMINAR ARTICULO, CANTIDAD Y COSTE
+        let eliminarBrocha = document.querySelector("#eliminarBrocha");
+        eliminarBrocha.addEventListener("click", function () { eliminarCarrito("Brocha", 11.95) });
+        let eliminarLlave = document.querySelector("#eliminarLlave");
+        eliminarLlave.addEventListener("click", function () { eliminarCarrito("Llave", 13.95) });
+        let eliminarMartillo = document.querySelector("#eliminarMartillo");
+        eliminarMartillo.addEventListener("click", function () { eliminarCarrito("Martillo", 14.95) });
+        let eliminarTronco = document.querySelector("#eliminarTronco");
+        eliminarTronco.addEventListener("click", function () { eliminarCarrito("Tronco", 9.95) });
+        function eliminarCarrito(articulo, coste) {
+            if (document.querySelector(".carrito") + articulo) {
+                let cantidad = document.querySelector(".carrito" + articulo + " .cantidad .numero").innerHTML;
+                cantidad--;
+                document.querySelector(".carrito" + articulo + " .cantidad .numero").innerHTML = cantidad;
+                let precioTotal = parseFloat(document.querySelector(".carrito" + articulo + " .costeTotal span").innerHTML);
+                precioTotal -= coste;
+                precioTotal = precioTotal.toFixed(2); //para limitar el precio a 2 decimales
+                document.querySelector(".carrito" + articulo + " .costeTotal span").innerHTML = precioTotal;
+                document.querySelector(".carrito" + articulo + " .iconImg").innerHTML = "";
+                for (let i = 0; i < cantidad; i++) {
+                    document.querySelector(".carrito" + articulo + " .iconImg").innerHTML += `<img src="./01- Carpinteria/iconos/${articulo.toLowerCase()}.svg">`;
+                }
+                if (cantidad === 0) {
+                    document.querySelector(".carrito" + articulo).remove(); // si llega a 0 elimina el carrito del articulo al que corresponda.
+
+                }
+
+            }
+            // no es necesario un else si no va a entrar nunca
+            SumarTodo();
+        }
+
+        // SUMAR EL TOTAL
+        
+        function SumarTodo() {
+            let totalBrocha;
+            let totalLlave;
+            let totalMartillo;
+            let totalTronco;
+            if (document.querySelector(".carritoBrocha .costeTotal span")) { // si existe la etiqueta, es decir, si ya hemos marcado un "añadir" para elegir un producto
+                totalBrocha = parseFloat(document.querySelector(".carritoBrocha .costeTotal span").innerHTML); // mete en la variable totalBrocha lo que está pintado en el HTML, sería el coste.
+            } else {
+                totalBrocha = 0;
+            }
+            if (document.querySelector(".carritoLlave .costeTotal span")) {
+                totalLlave = parseFloat(document.querySelector(".carritoLlave .costeTotal span").innerHTML);
+            } else {
+                totalLlave = 0;
+            }
+            if (document.querySelector(".carritoMartillo .costeTotal span")) {
+                totalMartillo = parseFloat(document.querySelector(".carritoMartillo .costeTotal span").innerHTML);
+            } else {
+                totalMartillo = 0;
+            }
+            if (document.querySelector(".carritoTronco .costeTotal span")) {
+                totalTronco = parseFloat(document.querySelector(".carritoTronco .costeTotal span").innerHTML);
+            } else {
+                totalTronco = 0;
+            }
+            let CosteTotalProductos = totalBrocha + totalLlave + totalMartillo + totalTronco; //suma o resta el total de cada producto, ya que si le resto automaticamente el totalBrocha (o el que sea) disminuye el coste
+
+            CosteTotalProductos = CosteTotalProductos.toFixed(2);
+            document.querySelector(".CosteTotalProductos").innerHTML = "Coste Total:" + CosteTotalProductos; //saca en pantalla lo que está dentro de la etiqueta con clase "CosteTotalProductos" en html y le pone Coste Total y el coste.
+
+        }
+    </script>
+</body>
+
+</html>
